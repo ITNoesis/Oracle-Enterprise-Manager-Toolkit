@@ -1,22 +1,37 @@
-Role Name
+ansible-role-oracle-oem-agent-deploy
 =========
 
-A brief description of the role goes here.
+This role is to deploy Oracle Enterprise Manager agents on target hosts running Linux operating system. The role has been tested on multiple servers running Oracle Enterprise Linux 6 and 7.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The role requires the agent media to be downloaded and placed in a folder on the ansible-controller. In absence of the install media, the role will simply fail asking for the file.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The variables are stored in defaults/main.yml.
+
+    oem_user: oraoem
+    oem_user_group: oinstall
+    oem_user_id: 15011
+    agent_port: 3900
+    agent_upload_port: 4903
+    oms_host: server.company.com
+    oemagent_base: /Monitoring/OEM13_4
+    oem_reg_passwd: Strong_Password@123##
+    # Place the OEM agent media on ansible controller
+    oem_agent_media: 13.4.0.0.0_AgentCore_226.zip
+    oem_agent_media_dir: /tmp/Agent_Media
+    oem_temp_dir: /tmp/ansible_emagent
+    oem_agent_version: 13.4.0.0.0
+    central_server: ansiblecontroller.company.com hosts: servers
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
@@ -25,7 +40,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+        role: oracle-oem-agent-deploy
 
 License
 -------
