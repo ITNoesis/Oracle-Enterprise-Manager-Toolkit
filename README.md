@@ -1,2 +1,2 @@
 # oem
-Repository for Oracle Enterprise Manager
+This repository is dedicated to automation with Oracle Enterprise Manager Cloud Control.
