@@ -1,14 +1,5 @@
 ---
 # tasks file for ansible-role-oracle-oem-agent-deploy
-# 1. Check if oraoem user exists - done
-# 2. If not, create - done
-# 3. Create base directories (owner oraoem, group dba) - done
-# 4. Check if agent install file exists - done
-# 5. If not, ask user to download --- - done
-# 6. copy pkg to remote and - done
-# 7. unzip install media - done
-# 8. install oem agent - done
-# 9. Execute root.sh - done
 
 - name: "Check if oem agent install file exists"
   ansible.builtin.stat:
@@ -107,14 +98,6 @@
   become_user: "{{ oem_user }}"
   with_items:
     - "{{ oem_temp_dir }}"
-
-# - name: "Copy OEM agent install file to managed node"
-#   copy:
-#     src: "{{ oem_agent_media_dir }}/{{ oem_agent_media }}"
-#     dest: "/tmp/ansible_emagent"
-#     owner: "{{ oem_user }}"
-#     group: "{{ oem_user_group }}"
-#     mode: u=rwx,g=rw,o=r
 
 - name: "Unarchive OEM install package"
   unarchive:
