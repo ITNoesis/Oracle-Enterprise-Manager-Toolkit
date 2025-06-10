@@ -1,0 +1,66 @@
+---
+# Created by: Arun Yadav
+# Playbook to install Oracle Cloud Obervability and Management Agent
+# Created on: Mar-14-2025
+
+- name: Install and Start O&M Agent (Linux)
+  hosts: "{{ target_host }}"
+  gather_facts: yes
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/main.yml
+    
+  tasks:
+    - name: "Copy JRE tar.gz to /opt"
+      copy:
+        src: "{{ playbook_dir }}/files/{{ jre_install_media }}"
+        dest: "/opt/{{ jre_install_media }}"
+        mode: '0644'
+
+    - name: "Copy Oracle Management Agent RPM to /opt"
+      copy:
+        src: "{{ playbook_dir }}/files/{{ oracle_mgmt_agent_install_media }}"
+        dest: "/opt/{{ oracle_mgmt_agent_install_media }}"
+        mode: '0644'
+
+    - name: "Extract JRE in /opt"
+      shell:
+        cmd: |
+          tar -xvf "/opt/{{ oracle_mgmt_agent_install_media }}"
+        chdir: "/opt"
+
+    - name: Install Oracle Management Agent RPM
+      shell: |
+        export JAVA_HOME=/opt/"{{ jre_version }}"
+        rpm -ivh "/opt/{{ oracle_mgmt_agent_install_media }}"
+      args:
+        executable: /bin/bash
+
+    - name: Copy response file input.rsp to agent directory
+      copy:
+        src: "{{ playbook_dir }}/files/input.rsp"
+        dest: /opt/oracle/mgmt_agent/input.rsp
+        mode: '0644'
+
+    - name: Run setup.sh with response file
+      shell: |
+        export JAVA_HOME=/opt/"{{ jre_version }}"
+        /opt/oracle/mgmt_agent/agent_inst/bin/setup.sh opts=/opt/oracle/mgmt_agent/input.rsp
+      args:
+        executable: /bin/bash
+
+    - name: Remove input.rsp
+      file:
+        path: /opt/oracle/mgmt_agent/input.rsp
+        state: absent
+
+    - name: Remove JRE tar.gz
+      file:
+        path: "/opt/{{ jre_install_media }}"
+        state: absent
+
+    - name: Remove Oracle Agent RPM
+      file:
+        path: "/opt/{{ oracle_mgmt_agent_install_media }}"
+        state: absent
