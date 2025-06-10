@@ -1,0 +1,3 @@
+jre_install_media: jre-8u441-linux-x64.tar.gz
+jre_version: jre1.8.0_441
+oracle_mgmt_agent_install_media: oracle.mgmt_agent.250128.1929.Linux-x86_64.rpm
